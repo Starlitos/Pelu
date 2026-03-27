@@ -4,12 +4,71 @@ import { Phone, MapPin, Clock, Navigation } from "lucide-react";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = `Nombre: ${form.name}%0ATel: ${form.phone}%0AMensaje: ${form.message}`;
-    window.open(`mailto:info@peluqueriainesiglesias.com?subject=Contacto desde la web&body=${body}`);
+    setIsSubmitting(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append("Nombre", form.name);
+      formData.append("Telefono", form.phone);
+      formData.append("Mensaje", form.message);
+
+      const response = await fetch("https://api.sheetmonkey.io/form/jLto4eUGamhdKBvnCLnctf", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setForm({ name: "", phone: "", message: "" });
+      } else {
+        throw new Error("Error al enviar el formulario");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (isSubmitted) {
+    return (
+      <section id="contacto" className="py-24 bg-background">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-2xl mx-auto"
+          >
+            <div className="mb-8">
+              <div className="w-20 h-20 bg-foreground rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <path d="M33.3334 10L15 28.3333L6.66669 20" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <h2 className="font-heading text-3xl md:text-4xl text-foreground mb-6">
+              ¡Reserva enviada con éxito!
+            </h2>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+              Te contactaremos pronto para confirmar tu cita.
+            </p>
+            <button
+              onClick={() => setIsSubmitted(false)}
+              className="inline-flex items-center gap-2 bg-foreground text-background px-8 py-4 text-sm tracking-widest uppercase font-bold hover:bg-foreground/90 transition-colors"
+            >
+              Enviar otro mensaje
+            </button>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="contacto" className="py-24 bg-background">
@@ -112,11 +171,14 @@ const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="space-y-6"
+            action="https://api.sheetmonkey.io/form/jLto4eUGamhdKBvnCLnctf"
+            method="POST"
           >
             <div>
               <label className="block text-sm tracking-wider uppercase text-muted-foreground mb-2">Nombre</label>
               <input
                 type="text"
+                name="Nombre"
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -127,6 +189,7 @@ const Contact = () => {
               <label className="block text-sm tracking-wider uppercase text-muted-foreground mb-2">Teléfono</label>
               <input
                 type="tel"
+                name="Telefono"
                 required
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -136,6 +199,7 @@ const Contact = () => {
             <div>
               <label className="block text-sm tracking-wider uppercase text-muted-foreground mb-2">Mensaje</label>
               <textarea
+                name="Mensaje"
                 rows={5}
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
@@ -144,9 +208,10 @@ const Contact = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-foreground text-background py-4 text-sm tracking-widest uppercase hover:bg-salon-charcoal/80 transition-colors"
+              disabled={isSubmitting}
+              className="w-full bg-foreground text-background py-4 text-sm tracking-widest uppercase hover:bg-salon-charcoal/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Enviar mensaje
+              {isSubmitting ? "Enviando..." : "Enviar mensaje"}
             </button>
           </motion.form>
         </div>
