@@ -6,9 +6,35 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
+
+  const validatePhone = (phone: string) => {
+    const phoneDigits = phone.replace(/\D/g, ''); // Remove all non-digit characters
+    if (phoneDigits.length === 0) {
+      setPhoneError("");
+      return true;
+    } else if (phoneDigits.length !== 9) {
+      setPhoneError("El teléfono debe tener exactamente 9 dígitos");
+      return false;
+    } else {
+      setPhoneError("");
+      return true;
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setForm({ ...form, phone: value });
+    validatePhone(value);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validatePhone(form.phone)) {
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -25,6 +51,7 @@ const Contact = () => {
       if (response.ok) {
         setIsSubmitted(true);
         setForm({ name: "", phone: "", message: "" });
+        setPhoneError("");
       } else {
         throw new Error("Error al enviar el formulario");
       }
@@ -192,9 +219,18 @@ const Contact = () => {
                 name="Telefono"
                 required
                 value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="w-full border border-border bg-background px-4 py-3 text-foreground focus:border-salon-sand focus:outline-none transition-colors"
+                onChange={handlePhoneChange}
+                className={`w-full border bg-background px-4 py-3 text-foreground focus:outline-none transition-colors resize-none ${
+                  phoneError 
+                    ? 'border-red-500 focus:border-red-500' 
+                    : 'border-border focus:border-salon-sand'
+                }`}
+                placeholder="9 dígitos"
+                maxLength={12}
               />
+              {phoneError && (
+                <p className="text-red-500 text-sm mt-2">{phoneError}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm tracking-wider uppercase text-muted-foreground mb-2">Mensaje</label>
