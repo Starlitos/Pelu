@@ -10,147 +10,66 @@ const ScissorsAnimation = () => (
     whileHover={{ scale: 1.02 }}
   >
     <svg
-      width="300"
-      height="300"
-      viewBox="0 0 300 300"
-      className="w-full h-auto max-w-[300px]"
-      style={{ filter: 'drop-shadow(0 6px 25px rgba(0,0,0,0.15))' }}
+      width="250"
+      height="250"
+      viewBox="0 0 250 250"
+      className="w-full h-auto max-w-[250px]"
+      style={{ filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.1))' }}
     >
       <defs>
-        <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#2a2a2a" />
-          <stop offset="50%" stopColor="#4a4a4a" />
-          <stop offset="100%" stopColor="#1a1a1a" />
-        </linearGradient>
-        <linearGradient id="handleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#1a1a1a" />
-          <stop offset="100%" stopColor="#3a3a3a" />
+        <linearGradient id="blackGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#000000" />
+          <stop offset="100%" stopColor="#333333" />
         </linearGradient>
       </defs>
       
-      {/* First scissor blade */}
+      {/* Center pivot / screw */}
+      <circle cx="125" cy="125" r="6" fill="url(#blackGradient)" />
+      <circle cx="125" cy="125" r="2" fill="#ffffff" opacity="0.4" />
+
+      {/* First blade and handle */}
       <motion.g
-        animate={{ rotate: [0, 12, 0] }}
+        animate={{ rotate: [0, 15, 0] }}
         transition={{ 
           repeat: Infinity, 
-          duration: 5, 
+          duration: 4, 
           ease: "easeInOut",
-          repeatDelay: 1
+          repeatDelay: 0.5
         }}
-        transformOrigin="150 150"
+        transformOrigin="125 125"
       >
-        {/* Blade */}
         <path
-          d="M150 60 L135 90 L140 120 L145 150 L150 180 L155 150 L160 120 L165 90 Z"
-          fill="url(#metalGradient)"
-          stroke="none"
+          d="M125 125 L110 50 C115 30 135 30 140 50 L125 125 Z"
+          fill="url(#blackGradient)"
         />
-        {/* Cutting edge line */}
-        <line
-          x1="150"
-          y1="60"
-          x2="165"
-          y2="90"
-          stroke="#ffffff"
-          strokeWidth="0.5"
-          opacity="0.3"
-        />
-        {/* Handle ring */}
-        <ellipse
-          cx="150"
-          cy="50"
-          rx="12"
-          ry="18"
-          fill="none"
-          stroke="url(#handleGradient)"
-          strokeWidth="3"
-        />
-        {/* Finger rest */}
         <path
-          d="M165 45 Q175 40 180 45"
-          fill="none"
-          stroke="url(#handleGradient)"
-          strokeWidth="2"
-          strokeLinecap="round"
+          d="M125 125 L110 190 C100 210 110 220 125 220 C140 220 150 210 140 190 L125 125 Z"
+          fill="url(#blackGradient)"
         />
-        {/* Screw detail */}
-        <circle cx="150" cy="150" r="4" fill="url(#metalGradient)" />
-        <circle cx="150" cy="150" r="2" fill="#ffffff" opacity="0.3" />
+        <circle cx="125" cy="205" r="15" fill="none" stroke="url(#blackGradient)" strokeWidth="8" />
       </motion.g>
       
-      {/* Second scissor blade */}
+      {/* Second blade and handle */}
       <motion.g
-        animate={{ rotate: [0, -12, 0] }}
+        animate={{ rotate: [0, -15, 0] }}
         transition={{ 
           repeat: Infinity, 
-          duration: 5, 
+          duration: 4, 
           ease: "easeInOut",
-          repeatDelay: 1
+          repeatDelay: 0.5
         }}
-        transformOrigin="150 150"
+        transformOrigin="125 125"
       >
-        {/* Blade */}
         <path
-          d="M150 60 L135 90 L140 120 L145 150 L150 180 L155 150 L160 120 L165 90 Z"
-          fill="url(#metalGradient)"
-          stroke="none"
-          opacity="0.85"
+          d="M125 125 L140 50 C135 30 115 30 110 50 L125 125 Z"
+          fill="url(#blackGradient)"
         />
-        {/* Cutting edge line */}
-        <line
-          x1="150"
-          y1="60"
-          x2="135"
-          y2="90"
-          stroke="#ffffff"
-          strokeWidth="0.5"
-          opacity="0.3"
+        <path
+          d="M125 125 L140 190 C150 210 140 220 125 220 C110 220 100 210 110 190 L125 125 Z"
+          fill="url(#blackGradient)"
         />
-        {/* Handle ring */}
-        <ellipse
-          cx="150"
-          cy="50"
-          rx="12"
-          ry="18"
-          fill="none"
-          stroke="url(#handleGradient)"
-          strokeWidth="3"
-        />
-        {/* Screw hole */}
-        <circle cx="150" cy="150" r="3" fill="none" stroke="url(#metalGradient)" strokeWidth="2" />
+        <circle cx="125" cy="205" r="15" fill="none" stroke="url(#blackGradient)" strokeWidth="8" />
       </motion.g>
-      
-      {/* Center screw */}
-      <motion.g
-        animate={{ scale: [1, 1.05, 1] }}
-        transition={{ 
-          repeat: Infinity, 
-          duration: 5, 
-          ease: "easeInOut"
-        }}
-      >
-        <circle cx="150" cy="150" r="6" fill="url(#metalGradient)" />
-        <circle cx="150" cy="150" r="4" fill="#2a2a2a" />
-        <circle cx="150" cy="150" r="2" fill="#ffffff" opacity="0.4" />
-      </motion.g>
-      
-      {/* Brand/decorative element */}
-      <motion.text
-        x="150"
-        y="220"
-        textAnchor="middle"
-        fontSize="8"
-        fill="url(#metalGradient)"
-        opacity="0.2"
-        animate={{ opacity: [0.2, 0.4, 0.2] }}
-        transition={{ 
-          repeat: Infinity, 
-          duration: 3, 
-          ease: "easeInOut"
-        }}
-      >
-        PREMIUM
-      </motion.text>
     </svg>
   </motion.div>
 );
